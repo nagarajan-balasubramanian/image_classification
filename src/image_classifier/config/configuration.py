@@ -24,3 +24,18 @@ class ConfigurationManager:
                                                    config['local_data_file'],
                                                    config['unzip_data_dir'])
         return data_ingestion_config
+    
+    def get_prepare_model_config(self) ->PrepareModelConfig:
+        config = self.config['prepare_model']
+
+        create_directories([config['root_dir']])
+
+        prepare_model_config= PrepareModelConfig(config['root_dir'], 
+                                                   config['base_model_path'],
+                                                   config['updated_model_path'],
+                                                   self.params['IMAGE_SIZE'],
+                                                   self.params['LEARNING_RATE'],
+                                                   self.params['INCLUDE_TOP'],
+                                                   self.params['WEIGHTS'],
+                                                   self.params['CLASSES'])
+        return prepare_model_config
