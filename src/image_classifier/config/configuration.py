@@ -2,6 +2,7 @@ import os
 from image_classifier.entity.config_entity import *
 from image_classifier.constants import *
 from image_classifier.utils.common import create_directories, read_yaml
+from pathlib import Path
 
 class ConfigurationManager:
     def __init__(self,
@@ -39,3 +40,34 @@ class ConfigurationManager:
                                                    self.params['WEIGHTS'],
                                                    self.params['CLASSES'])
         return prepare_model_config
+    
+
+    def get_model_training_config(self) ->ModelTrainingConfig:
+        config = self.config['model_training']
+
+        create_directories([config['root_dir']])
+
+        training_data_path = os.path.join(self.config['data_ingestion']['unzip_data_dir'],
+                                          "kidney-ct-scan-image")
+
+        model_training_config= ModelTrainingConfig(config['root_dir'], 
+                                                   config['trained_model_path'],
+                                                   self.config['prepare_model']['updated_model_path'],
+                                                   Path(training_data_path),
+                                                   self.params['EPOCHS'],
+                                                   self.params['BATCH_SIZE'],
+                                                   self.params['AUGMENTATION'],
+                                                   self.params['IMAGE_SIZE'])
+        return model_training_config
+    
+    def get_model_evaluation_config(self) ->ModelEvaluationConfig:
+        config = self.config['model_evaluation']
+
+        model_evaluation_config= ModelEvaluationConfig(config['model_path'],
+                                                   config['training_data'],
+                                                   config['mlflow_uri'],
+                                                   all_params=self.params,
+                                                   params_batch_size=self.params['BATCH_SIZE'],
+                                                   params_image_size=self.params['IMAGE_SIZE'],
+                                                   params_is_augmentation=self.params['AUGMENTATION'])
+        return model_evaluation_config

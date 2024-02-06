@@ -12,3 +12,14 @@ prepare_model:
   "updated_model_path":"artifacts/prepare_model/updated_base_model.h5"
   }
 
+model_training:
+  {"root_dir":"artifacts/model_training",
+  "trained_model_path":"artifacts/model_training/trained_model.h5"
+  }
+
+model_evaluation:
+  {
+  "model_path":"artifacts/model_training/trained_model.h5",
+  "training_data":"artifacts/data_ingestion/kidney-ct-scan-image",
+  "mlflow_uri":"https://dagshub.com/nagarajan.bala/image_classification.mlflow"
+  }
